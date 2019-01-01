@@ -6,7 +6,7 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
 	
 	<!-- properties 등록 -->
-	<context:property-placeholder location="classpath:database.properties"/>	
+	<context:property-placeholder location="classpath:/properties/database.properties"/>	
 	
 	<!-- dataSource 등록 -->
 	<bean id="data-source" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
@@ -32,17 +32,18 @@
 	</bean>	
 	
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-		<property name="dataSource" ref="dataSource"/>
-		<property name="typeAliasesPackage" value="com.anhong.project.vo"/>
-		<property name="configLocation" value=""></property>
+		<property name="dataSource" ref="data-source"/>
+		<property name="configLocation" value="classpath:/config/mybatis-config.xml"/>
+		<property name="mapperLocations" value="classpath*:/mappers/*.xml"/>
 	</bean>
 	
-	<bean id="mapperScanner" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value=""/>
-	</bean>
-	
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory"></constructor-arg>
+    </bean>
 	<context:component-scan base-package="com.anhong.project">
 		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
 	</context:component-scan>
 	
+
+
 </beans>
