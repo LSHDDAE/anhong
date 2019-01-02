@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.anhong.project.dao.BoardDao">
+	<insert id="loginInsert">
+		insert into board(
+		title,
+		content,
+		writer,
+		pwd,
+		member_idx
+		)values(
+		#{title},
+		#{content},
+		#{writer},
+		#{pwd},
+		#{member_idx})
+	</insert>
+
+	<update id="update">
+		update board set
+		title = #{title},
+		content = #{content},
+		writer = #{writer}
+		where bno = #{bno}
+		<if test="member_idx > 0">
+			and member_idx = #{member_idx}
+		</if>
+		<if test="member_idx == 0">
+			and pwd = #{pwd}
+		</if>
+	</update>
+
+	<delete id="delete">
+		delete from board where bno = #{bno}
+	</delete>
+
+	<select id="read" resultType="Board">
+		select * from board
+		where bno = #{bno}
+	</select>
+
+	<select id="boardCount" resultType="int">
+		select count(*) from board
+	</select>
+
+ 	<select id="pwdCheck" resultType="Int">
+		select count(*) from board
+		where pwd = #{pwd} and bno = #{bno}
+	</select>
+
+	<select id="listAll" resultType="Board">
+		select * from board
+		order by bno
+		desc
+		LIMIT #{start}, 10
+	</select>
+</mapper>
